@@ -94,6 +94,12 @@ class Board{
         
     }
 
+    hardDrop(){
+        while (!this.checkCollide()){
+            this.curPiece.moveDown();
+        }
+    }
+
 
     checkCollide(){
         let coords = this.curPiece.getCoords();
@@ -102,15 +108,16 @@ class Board{
             if (c[1] == this.numY - 1){
                 this.generatePiece();
                 this.addDeadPiece(coords);
-                return;
+                return true;
             }
             
             else if (this.board[c[0]][c[1] + 1] != null){
                 this.generatePiece();
                 this.addDeadPiece(coords);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     makeRotationValid(){
@@ -165,11 +172,17 @@ class Board{
                 if (c[0] <= 0){
                     return;
                 }
+                else if (this.board[c[0] - 1][c[1]] instanceof Block){
+                    return;
+                }
             }
         }
         else if(keyCode === RIGHT_ARROW){
             for (const c of coords){
                 if (c[0] >= this.numX - 1){
+                    return;
+                }
+                else if (this.board[c[0] + 1][c[1]] instanceof Block){
                     return;
                 }
             }
@@ -195,6 +208,10 @@ class Board{
         else if (keyCode === 90){
             this.curPiece.rotateLeft();
             this.makeRotationValid();
+        }
+        else if (keyCode === 32){
+            console.log('hey');
+            this.hardDrop();
         }
 
         else if (keyCode === 82){
