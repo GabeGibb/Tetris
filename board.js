@@ -1,7 +1,7 @@
 
 
 class Board{
-    constructor(width, height, x, y){
+    constructor(width, x, y){
         this.board = new Array(x);
         for(let i = 0; i < x; i++){
             this.board[i] = new Array(y);
@@ -11,31 +11,87 @@ class Board{
         this.numY = y;
         this.blockSize = width / x;
 
+        this.pieces = [IPiece, JPiece, LPiece, OPiece, SPiece, TPiece, SPiece]
         this.curPiece;
         this.generatePiece();
+
+
     }
 
     drawBoard(){
+        let count1 = 0;
+        let count2 = 0;
         for (let j = 0; j < this.numY; j++){
             for (let i = 0; i < this.numX; i++){
-                if (this.board[i][j] == null){
-                    fill(255);
-                    square(i * this.blockSize, j * this.blockSize, this.blockSize);
+                if (this.board[i][j] instanceof Block){
+                    this.board[i][j].draw();
+                    count1 += 1;
+
+                    if(i == 0 && j == 6){
+                        console.log('yeah');
+                    }
                 }
                 else{
-                    this.board[i][j].draw();
+                    fill(255);
+                    square(i * this.blockSize, j * this.blockSize, this.blockSize);
+                    count2 += 1;
                 }   
+
+                
             }
         }
+        // console.log(count1, count2);
     }
 
     generatePiece(){
-        let x = this.blockSize * (this.numX / 2) - this.blockSize * 2;
-        this.curPiece = new IPiece(x, 0, this.blockSize);
+        this.curPiece = null;
+        let piece = this.pieces[Math.floor(Math.random()*this.pieces.length)]
+        this.curPiece = new piece(this.numX, this.blockSize);
+        // this.curPiece = new OPiece(this.numX, this.blockSize);
     }
 
     drawPiece(){
         this.curPiece.draw();
+    }
+
+    checkClear(){
+        let full = true;
+        for (let i = 0; i < this.numY; i++){
+            for (const arr of this.board){
+                if (arr[i] == null){
+                    full = false;
+                }
+            }
+            
+            if (full){
+                this.clearRow(i);
+                this.moveBlocksDown(i);
+
+            }
+            full = true;
+        }
+    }
+
+    clearRow(level){
+        let y = level;
+
+        for (let i = 0; i < this.numX; i++){
+            this.board[i][y] = null;
+        }
+    }
+
+    moveBlocksDown(level){
+        let y = level;
+        while (y > 0){
+            for (let i = 0; i < this.numX; i++){
+                if (this.board[i][y-1] instanceof Block){
+                    this.board[i][y] = new Block(i, y)
+                    this.board[i][y-1] = null;
+                }
+            }
+            y -= 1;
+        }
+        
     }
 
 
@@ -58,6 +114,8 @@ class Board{
     }
 
     makeRotationValid(){
+        //DOES NOT WORK
+
         let coords = this.curPiece.getCoords();
         let c;
         for (let i = 0; i < coords.length; i++){
@@ -134,8 +192,10 @@ class Board{
             this.curPiece.rotateRight();
             this.makeRotationValid();
         }
-
-
+        else if (keyCode === 90){
+            this.curPiece.rotateLeft();
+            this.makeRotationValid();
+        }
 
         else if (keyCode === 82){
             console.log(this.board);

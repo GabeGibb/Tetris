@@ -16,7 +16,6 @@ class Block{
     draw(){
         fill(0);
         square(this.x * this.size, this.y * this.size, this.size);
-       
     }
 
     moveDown(){
