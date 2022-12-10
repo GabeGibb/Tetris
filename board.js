@@ -19,35 +19,44 @@ class Board{
     }
 
     drawBoard(){
-        let count1 = 0;
-        let count2 = 0;
         for (let j = 0; j < this.numY; j++){
             for (let i = 0; i < this.numX; i++){
                 if (this.board[i][j] instanceof Block){
                     this.board[i][j].draw();
-                    count1 += 1;
 
-                    if(i == 0 && j == 6){
-                        console.log('yeah');
-                    }
                 }
                 else{
                     fill(255);
                     square(i * this.blockSize, j * this.blockSize, this.blockSize);
-                    count2 += 1;
-                }   
-
-                
+                }     
             }
         }
-        // console.log(count1, count2);
     }
 
     generatePiece(){
         this.curPiece = null;
         let piece = this.pieces[Math.floor(Math.random()*this.pieces.length)]
         this.curPiece = new piece(this.numX, this.blockSize);
-        // this.curPiece = new OPiece(this.numX, this.blockSize);
+        
+
+        let coords = this.curPiece.getCoords();
+        for (const c of coords){
+            if (this.board[c[0]][c[1]] instanceof Block){
+                this.clearBoard();
+                return;
+            }
+        }
+    }
+
+    clearBoard(){ //WHAT IN THE EVERLIVING FUCK
+        for (let i = 0; i < this.numX; i++){
+            for (let j = 0; j < this.numY; j++){
+                this.board[i][j] = 5;
+                // this.board[i][j] = null;
+            }
+        }
+        // this.generatePiece();
+        console.log(this.board);
     }
 
     drawPiece(){
@@ -210,7 +219,6 @@ class Board{
             this.makeRotationValid();
         }
         else if (keyCode === 32){
-            console.log('hey');
             this.hardDrop();
         }
 

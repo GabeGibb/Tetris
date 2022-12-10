@@ -25,11 +25,11 @@ function draw() {
   board.checkCollide();
   board.checkClear();
 
-  // if (delay == 0){
-  //   delay = 15;
-  //   board.curPiece.moveDown();
-  // }
-  // delay -= 1
+  if (delay == 0){
+    delay = 15;
+    board.curPiece.moveDown();
+  }
+  delay -= 1
 }
 
 function keyPressed(){
