@@ -10,7 +10,9 @@ let YBLOCKS = 20;
 let BORDER = 3
 let board = new Board(WIDTH, XBLOCKS, YBLOCKS);
 
-let delay = 60;
+let DELAY = 10;
+let delay = DELAY;
+
 
 function setup() {
   createCanvas(WIDTH, HEIGHT);
@@ -24,20 +26,20 @@ function draw() {
   board.drawBoard();
   board.drawPiece();
 
-  if (board.checkCollide()){
-    board.generatePiece();
-    board.addDeadPiece(board.curPiece.getCoords());
+
+  if (delay == 0){
+    delay = DELAY;
+    board.curPiece.moveDown();
   }
+  delay -= 1
+
+  board.checkCollide();
+  board.checkDrop();
   board.checkClear();
 
-  // if (delay == 0){
-  //   delay = 15;
-  //   board.curPiece.moveDown();
-  // }
-  // delay -= 1
+
 }
 
 function keyPressed(){
   board.handleInput();
-
 }

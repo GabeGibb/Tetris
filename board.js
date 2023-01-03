@@ -17,10 +17,12 @@ class Board{
         this.curPiece;
         this.generatePiece();
 
-        this.ARR = 50;
+        this.ARR = 20;
+        this.DAS = 100;
+        this.SDF = 40;
 
-        this.life = 5;
-
+        this.curLife = 5;
+        this.totalLife = 5;
     }
 
     drawBoard(){
@@ -122,38 +124,45 @@ class Board{
         
     }
 
-    hardDrop(){
-        while (!this.checkCollide()){
-            this.curPiece.moveDown();
-        }
-    }
-
-
     checkCollide(){
         let coords = this.curPiece.getCoords();
 
         for (const c of coords){
-            if (c[1] == this.numY - 1){
+            if (c[1] == this.numY){
+                this.curPiece.moveUp();
+                this.curLife -= 1;
+                // coords = this.curPiece.getCoords();
                 // this.generatePiece();
                 // this.addDeadPiece(coords);
                 return true;
             }
             
-            else if (this.board[c[0]][c[1] + 1] != null){
+            else if (this.board[c[0]][c[1]] != null){
+                this.curPiece.moveUp();
+                this.curLife -= 1;
+                // coords = this.curPiece.getCoords();
                 // this.generatePiece();
                 // this.addDeadPiece(coords);
                 return true;
             }
         }
+
         return false;
+        
+    }
+
+    checkDrop(){
+        console.log(this.curLife);
+        if (this.curLife <= 0){
+            this.curLife = this.totalLife;
+            let coords = this.curPiece.getCoords();
+            this.generatePiece();
+            this.addDeadPiece(coords);
+        }
+        
     }
 
 
-    placePiece(){
-        let coords = this.curPiece.getCoords();
-        this.generatePiece();
-        this.addDeadPiece(coords);
-    }
 
     makeRotationValid(){
         //DOES NOT WORK
@@ -163,28 +172,32 @@ class Board{
         for (let i = 0; i < coords.length; i++){
             c = coords[i]
             if (c[0] < 0){
-                this.curPiece.addToCoords(1, 0);
-                coords = this.curPiece.getCoords();
-                c = coords[i]
+                // this.curPiece.addToCoords(1, 0);
+                // coords = this.curPiece.getCoords();
+                // c = coords[i]
+                return true;
             }
 
             if (c[0] >= this.numX){
-                this.curPiece.addToCoords(-1, 0);
-                coords = this.curPiece.getCoords();
-                c = coords[i]
+                // this.curPiece.addToCoords(-1, 0);
+                // coords = this.curPiece.getCoords();
+                // c = coords[i]
+                return true;
             }
 
             if (c[1] >= this.numY){
-                this.curPiece.addToCoords(0, -1);
-                coords = this.curPiece.getCoords();
-                c = coords[i]
+                // this.curPiece.addToCoords(0, -1);
+                // coords = this.curPiece.getCoords();
+                // c = coords[i]
+                return true;
             }
 
             if (this.board?.[c[0]] && this.board[c[0]]?.[c[1]]){
                 if (this.board[c[0]][c[1] + 1] != null){
-                    this.curPiece.addToCoords(0, -1);
-                    coords = this.curPiece.getCoords();
-                    c = coords[i]
+                    // this.curPiece.addToCoords(0, -1);
+                    // coords = this.curPiece.getCoords();
+                    // c = coords[i]
+                    return true;
                 }
             }
             
@@ -202,76 +215,122 @@ class Board{
 
     handleInput(){
         if (keyCode === DOWN_ARROW){
-            this.curPiece.moveDown();
+            this.softDrop();
         }
-        else if (keyCode === RIGHT_ARROW){
-            this.pieceRight();
+        if (keyCode === RIGHT_ARROW){
+            this.pieceRight(true);
+            setTimeout(()=>{
+                this.pieceRight(false);
+            }, this.DAS)  
         }
-        else if (keyCode === LEFT_ARROW){
-            this.pieceLeft();
+        if (keyIsDown(LEFT_ARROW)){
+            this.pieceLeft(true);
+            setTimeout(()=>{
+                this.pieceLeft(false);
+            }, this.DAS)  
         }
-        else if (keyCode === UP_ARROW){
-            this.curPiece.moveUp();
-        }
-        else if (keyCode === 88){
+        // else if (keyCode === UP_ARROW){
+        //     this.curPiece.moveUp();
+        // }
+        if (keyCode === 88){
             this.curPiece.rotateRight();
-            this.makeRotationValid();
+            if(this.makeRotationValid()){
+                this.curPiece.rotateLeft();
+            }
+            
         }
-        else if (keyCode === 90){
+        if (keyCode === 90){
             this.curPiece.rotateLeft();
-            this.makeRotationValid();
+            if(this.makeRotationValid()){
+                this.curPiece.rotateRight();
+            }
         }
-        else if (keyCode === 32){
+        if (keyCode === 32){
             this.hardDrop();
         }
 
-        else if (keyCode === 82){
+        if (keyCode === 82){
             console.log(this.board);
         }
     }
 
-    pieceLeft(){
-        if (!keyIsPressed && keyCode == LEFT_ARROW){
+    pieceLeft(first){
+    
+        if (!keyIsDown(LEFT_ARROW) || keyIsDown(RIGHT_ARROW)){
             return;
         }
         let coords = this.curPiece.getCoords();
+        let shouldMove = true;
         for (const c of coords){
             if (c[0] <= 0){
-                return;
+                shouldMove = false;
             }
             else if (this.board[c[0] - 1][c[1]] instanceof Block){
-                return;
+                shouldMove = false;
             }
         }
-        this.curPiece.moveLeft();
-
-        // if (keyIsPressed){
-        //     setTimeout(()=>{
-        //         this.pieceLeft();
-        //     }, this.ARR)  
-        // }
+        if(shouldMove){
+            this.curPiece.moveLeft();
+        }
+        if (first){
+            return;
+        }
+        setTimeout(()=>{
+            this.pieceLeft(false);
+        }, this.ARR)  
+        
     }
 
-    pieceRight(){
-        if (!keyIsPressed && keyCode == RIGHT_ARROW){
+    pieceRight(first){
+        
+        if (!keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW)){
             return;
         }
         let coords = this.curPiece.getCoords();
+        let shouldMove = true;
         for (const c of coords){
             if (c[0] >= this.numX - 1){
-                return;
+                shouldMove = false;
             }
             else if (this.board[c[0] + 1][c[1]] instanceof Block){
-                return;
+                shouldMove = false;
             }
         }
-        this.curPiece.moveRight();
+        if(shouldMove){
+            this.curPiece.moveRight();
+        }
+        
 
-        // if (keyIsPressed){
-        //     setTimeout(()=>{
-        //         this.pieceRight();
-        //     }, this.ARR)  
-        // }
+        if (first){
+            return;
+        }
+        setTimeout(()=>{
+            this.pieceRight(false);
+        }, this.ARR)  
+    }
+
+    softDrop(){
+
+        if (!keyIsDown(DOWN_ARROW)){
+            return;
+        }
+        this.curPiece.moveDown();
+        this.checkCollide();
+        this.checkDrop();
+
+        setTimeout(()=>{
+            this.softDrop();
+        }, this.SDF) 
+    }
+
+    hardDrop(){
+        while (!this.checkCollide()){
+            this.curPiece.moveDown();
+        }
+        this.curLife = 0;
+        this.checkDrop();
+        // this.checkClear();
+        
     }
 
 }
