@@ -11,10 +11,15 @@ class Board{
         this.numY = y;
         this.blockSize = width / x;
 
-        this.pieces = [IPiece, JPiece, LPiece, OPiece, SPiece, TPiece, SPiece]
+        this.pieces = [IPiece, JPiece, LPiece, OPiece, SPiece, TPiece, ZPiece];
+        this.curBag = [];
+        this.shuffleBag();
         this.curPiece;
         this.generatePiece();
 
+        this.ARR = 50;
+
+        this.life = 5;
 
     }
 
@@ -33,9 +38,23 @@ class Board{
         }
     }
 
+    shuffleBag(){
+        let i = 0;
+        let bag = [...this.pieces];
+        let index;
+        while (bag.length > 0){
+            index = Math.floor(Math.random()*(bag.length - 1));
+            this.curBag.push(bag[index]);
+            bag.splice(index, 1);
+        }
+    }
+
     generatePiece(){
         this.curPiece = null;
-        let piece = this.pieces[Math.floor(Math.random()*this.pieces.length)]
+        if (this.curBag.length == 0){
+            this.shuffleBag();
+        }
+        let piece = this.curBag.pop();    
         this.curPiece = new piece(this.numX, this.blockSize);
         
 
@@ -48,7 +67,7 @@ class Board{
         }
     }
 
-    clearBoard(){ //WHAT IN THE EVERLIVING FUCK
+    clearBoard(){ //WHAT WHY DOES 5 MAKE IT WORK
         for (let i = 0; i < this.numX; i++){
             for (let j = 0; j < this.numY; j++){
                 this.board[i][j] = 5;
@@ -115,18 +134,25 @@ class Board{
 
         for (const c of coords){
             if (c[1] == this.numY - 1){
-                this.generatePiece();
-                this.addDeadPiece(coords);
+                // this.generatePiece();
+                // this.addDeadPiece(coords);
                 return true;
             }
             
             else if (this.board[c[0]][c[1] + 1] != null){
-                this.generatePiece();
-                this.addDeadPiece(coords);
+                // this.generatePiece();
+                // this.addDeadPiece(coords);
                 return true;
             }
         }
         return false;
+    }
+
+
+    placePiece(){
+        let coords = this.curPiece.getCoords();
+        this.generatePiece();
+        this.addDeadPiece(coords);
     }
 
     makeRotationValid(){
@@ -170,42 +196,19 @@ class Board{
         for (const c of coords){
             this.board[c[0]][c[1]] = new Block(c[0], c[1], this.blockSize);
         }
-    }
+    }  
 
 
 
     handleInput(){
-        let coords = this.curPiece.getCoords();
-        if (keyCode === LEFT_ARROW){
-            for (const c of coords){
-                if (c[0] <= 0){
-                    return;
-                }
-                else if (this.board[c[0] - 1][c[1]] instanceof Block){
-                    return;
-                }
-            }
-        }
-        else if(keyCode === RIGHT_ARROW){
-            for (const c of coords){
-                if (c[0] >= this.numX - 1){
-                    return;
-                }
-                else if (this.board[c[0] + 1][c[1]] instanceof Block){
-                    return;
-                }
-            }
-        }
-
-
         if (keyCode === DOWN_ARROW){
             this.curPiece.moveDown();
         }
         else if (keyCode === RIGHT_ARROW){
-            this.curPiece.moveRight();
+            this.pieceRight();
         }
         else if (keyCode === LEFT_ARROW){
-            this.curPiece.moveLeft();
+            this.pieceLeft();
         }
         else if (keyCode === UP_ARROW){
             this.curPiece.moveUp();
@@ -225,9 +228,50 @@ class Board{
         else if (keyCode === 82){
             console.log(this.board);
         }
-
-
     }
 
+    pieceLeft(){
+        if (!keyIsPressed && keyCode == LEFT_ARROW){
+            return;
+        }
+        let coords = this.curPiece.getCoords();
+        for (const c of coords){
+            if (c[0] <= 0){
+                return;
+            }
+            else if (this.board[c[0] - 1][c[1]] instanceof Block){
+                return;
+            }
+        }
+        this.curPiece.moveLeft();
+
+        // if (keyIsPressed){
+        //     setTimeout(()=>{
+        //         this.pieceLeft();
+        //     }, this.ARR)  
+        // }
+    }
+
+    pieceRight(){
+        if (!keyIsPressed && keyCode == RIGHT_ARROW){
+            return;
+        }
+        let coords = this.curPiece.getCoords();
+        for (const c of coords){
+            if (c[0] >= this.numX - 1){
+                return;
+            }
+            else if (this.board[c[0] + 1][c[1]] instanceof Block){
+                return;
+            }
+        }
+        this.curPiece.moveRight();
+
+        // if (keyIsPressed){
+        //     setTimeout(()=>{
+        //         this.pieceRight();
+        //     }, this.ARR)  
+        // }
+    }
 
 }
