@@ -1,8 +1,9 @@
 class Block{
-    constructor(x, y, size){
+    constructor(x, y, size, color){
         this.x = x;
         this.y = y;
         this.size = size;
+        this.color = color;
     }   
 
     addToCoords(x, y){
@@ -14,7 +15,7 @@ class Block{
         return [this.x, this.y];
     }
     draw(){
-        fill(0);
+        fill(this.color);
         square(this.x * this.size, this.y * this.size, this.size);
     }
 

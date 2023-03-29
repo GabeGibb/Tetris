@@ -1,8 +1,9 @@
 
 class Piece{
-    constructor(){
+    constructor(color){
         this.blocks = new Array(0);
         this.rotations = new Array(0);
+        this.color = color;
     }
 
     draw(){
@@ -65,7 +66,6 @@ class Piece{
         for (const block of this.blocks){
             posList.push(block.getCoords());
         }
-        
         return posList;
     }
 
@@ -74,17 +74,19 @@ class Piece{
             block.addToCoords(x, y);
         }
     }
+
 }
 
 
 class IPiece extends Piece{
     constructor(startX, blockSize){
-        super();
+        let color = '#01EDFA';
+        super(color);
         let first = Math.floor(startX / 2) - 2
-        this.blocks.push(new Block(first, 0, blockSize));
-        this.blocks.push(new Block(first + 1, 0, blockSize));
-        this.blocks.push(new Block(first + 2, 0, blockSize));
-        this.blocks.push(new Block(first + 3, 0, blockSize));   
+        this.blocks.push(new Block(first, 0, blockSize, color));
+        this.blocks.push(new Block(first + 1, 0, blockSize,color));
+        this.blocks.push(new Block(first + 2, 0, blockSize,color));
+        this.blocks.push(new Block(first + 3, 0, blockSize,color));   
 
         this.curR = 0;
         this.rotations.push([[2, -1], [1, 0], [0, 1], [-1, 2]]);
@@ -96,12 +98,13 @@ class IPiece extends Piece{
 
 class JPiece extends Piece{
     constructor(startX, blockSize){
-        super();
-        let first = Math.floor(startX / 2) - 1
-        this.blocks.push(new Block(first, 0, blockSize));
-        this.blocks.push(new Block(first, 1, blockSize));
-        this.blocks.push(new Block(first + 1, 1, blockSize));
-        this.blocks.push(new Block(first + 2, 1, blockSize));   
+        let color = '#0077D3';
+        super(color);
+        let first = Math.floor(startX / 2) - 1;
+        this.blocks.push(new Block(first, 0, blockSize, color));
+        this.blocks.push(new Block(first, 1, blockSize, color));
+        this.blocks.push(new Block(first + 1, 1, blockSize, color));
+        this.blocks.push(new Block(first + 2, 1, blockSize, color));   
 
         this.curR = 0;
         this.rotations.push([[2, 0], [1, -1], [0, 0], [-1, 1]]);
@@ -113,12 +116,13 @@ class JPiece extends Piece{
 
 class LPiece extends Piece{
     constructor(startX, blockSize){
-        super();
-        let first = Math.floor(startX / 2) - 1
-        this.blocks.push(new Block(first, 1, blockSize));
-        this.blocks.push(new Block(first + 1, 1, blockSize));
-        this.blocks.push(new Block(first + 2, 0, blockSize));
-        this.blocks.push(new Block(first + 2, 1, blockSize));   
+        let color = '#FF910C';
+        super(color);
+        let first = Math.floor(startX / 2) - 1;
+        this.blocks.push(new Block(first, 1, blockSize, color));
+        this.blocks.push(new Block(first + 1, 1, blockSize, color));
+        this.blocks.push(new Block(first + 2, 0, blockSize, color));
+        this.blocks.push(new Block(first + 2, 1, blockSize, color));   
 
         this.curR = 0;
         this.rotations.push([[1, -1], [0, 0], [0, 2], [-1, 1]]);
@@ -130,12 +134,13 @@ class LPiece extends Piece{
 
 class OPiece extends Piece{
     constructor(startX, blockSize){
-        super();
-        let first = Math.floor(startX / 2) - 1
-        this.blocks.push(new Block(first, 0, blockSize));
-        this.blocks.push(new Block(first + 1, 0, blockSize));
-        this.blocks.push(new Block(first, 1, blockSize));
-        this.blocks.push(new Block(first + 1, 1, blockSize));   
+        let color = '#FEFB34';
+        super(color);
+        let first = Math.floor(startX / 2) - 1;
+        this.blocks.push(new Block(first, 0, blockSize, color));
+        this.blocks.push(new Block(first + 1, 0, blockSize, color));
+        this.blocks.push(new Block(first, 1, blockSize, color));
+        this.blocks.push(new Block(first + 1, 1, blockSize, color));   
     }
 
     rotateRight(){}
@@ -144,12 +149,13 @@ class OPiece extends Piece{
 
 class SPiece extends Piece{
     constructor(startX, blockSize){
-        super();
-        let first = Math.floor(startX / 2) - 1
-        this.blocks.push(new Block(first, 1, blockSize));
-        this.blocks.push(new Block(first + 1, 0, blockSize));
-        this.blocks.push(new Block(first + 1, 1, blockSize));
-        this.blocks.push(new Block(first + 2, 0, blockSize));   
+        let color = '#53DA3F';
+        super(color);
+        let first = Math.floor(startX / 2) - 1;
+        this.blocks.push(new Block(first, 1, blockSize, color));
+        this.blocks.push(new Block(first + 1, 0, blockSize, color));
+        this.blocks.push(new Block(first + 1, 1, blockSize, color));
+        this.blocks.push(new Block(first + 2, 0, blockSize, color));   
 
         this.curR = 0;
         this.rotations.push([[1, -1], [1, 1], [0, 0], [0, 2]]);
@@ -161,12 +167,13 @@ class SPiece extends Piece{
 
 class TPiece extends Piece{
     constructor(startX, blockSize){
-        super();
-        let first = Math.floor(startX / 2) - 1
-        this.blocks.push(new Block(first, 1, blockSize));
-        this.blocks.push(new Block(first + 1, 0, blockSize));
-        this.blocks.push(new Block(first + 1, 1, blockSize));
-        this.blocks.push(new Block(first + 2, 1, blockSize));   
+        let color = '#DD0AB2';
+        super(color);
+        let first = Math.floor(startX / 2) - 1;
+        this.blocks.push(new Block(first, 1, blockSize, color));
+        this.blocks.push(new Block(first + 1, 0, blockSize, color));
+        this.blocks.push(new Block(first + 1, 1, blockSize, color));
+        this.blocks.push(new Block(first + 2, 1, blockSize, color));   
 
         this.curR = 0;
         this.rotations.push([[1, -1], [1, 1], [0, 0], [-1, 1]]);
@@ -178,12 +185,13 @@ class TPiece extends Piece{
 
 class ZPiece extends Piece{
     constructor(startX, blockSize){
-        super();
-        let first = Math.floor(startX / 2) - 1
-        this.blocks.push(new Block(first, 0, blockSize));
-        this.blocks.push(new Block(first + 1, 0, blockSize));
-        this.blocks.push(new Block(first + 1, 1, blockSize));
-        this.blocks.push(new Block(first + 2, 1, blockSize));   
+        let color = '#EA141C';
+        super(color);
+        let first = Math.floor(startX / 2) - 1;
+        this.blocks.push(new Block(first, 0, blockSize, color));
+        this.blocks.push(new Block(first + 1, 0, blockSize, color));
+        this.blocks.push(new Block(first + 1, 1, blockSize, color));
+        this.blocks.push(new Block(first + 2, 1, blockSize, color));   
 
         this.curR = 0;
         this.rotations.push([[2, 0], [1, 1], [0, 0], [-1, 1]]);

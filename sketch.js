@@ -10,7 +10,7 @@ let YBLOCKS = 20;
 let BORDER = 3
 let board = new Board(WIDTH, XBLOCKS, YBLOCKS);
 
-let DELAY = 10;
+let DELAY = 20;
 let delay = DELAY;
 
 
@@ -18,7 +18,7 @@ function setup() {
   createCanvas(WIDTH, HEIGHT);
 
   strokeWeight(BORDER);
-  // frameRate(5);
+  frameRate(5);
 }
 
 

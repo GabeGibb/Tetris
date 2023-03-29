@@ -1,5 +1,4 @@
 
-
 class Board{
     constructor(width, x, y){
         this.board = new Array(x);
@@ -33,7 +32,10 @@ class Board{
 
                 }
                 else{
-                    fill(255);
+                    strokeWeight(1);
+                    stroke(255);
+                    
+                    fill(0);
                     square(i * this.blockSize, j * this.blockSize, this.blockSize);
                 }     
             }
@@ -45,7 +47,7 @@ class Board{
         let bag = [...this.pieces];
         let index;
         while (bag.length > 0){
-            index = Math.floor(Math.random()*(bag.length - 1));
+            index = Math.floor(Math.random()*(bag.length));
             this.curBag.push(bag[index]);
             bag.splice(index, 1);
         }
@@ -59,7 +61,6 @@ class Board{
         let piece = this.curBag.pop();    
         this.curPiece = new piece(this.numX, this.blockSize);
         
-
         let coords = this.curPiece.getCoords();
         for (const c of coords){
             if (this.board[c[0]][c[1]] instanceof Block){
@@ -81,6 +82,7 @@ class Board{
     }
 
     drawPiece(){
+        this.outlinePiece();
         this.curPiece.draw();
     }
 
@@ -115,7 +117,7 @@ class Board{
         while (y > 0){
             for (let i = 0; i < this.numX; i++){
                 if (this.board[i][y-1] instanceof Block){
-                    this.board[i][y] = new Block(i, y)
+                    this.board[i][y] = new Block(i, y, this.blockSize,this.board[i][y-1].color)
                     this.board[i][y-1] = null;
                 }
             }
@@ -126,38 +128,30 @@ class Board{
 
     checkCollide(){
         let coords = this.curPiece.getCoords();
-
         for (const c of coords){
             if (c[1] == this.numY){
                 this.curPiece.moveUp();
                 this.curLife -= 1;
-                // coords = this.curPiece.getCoords();
-                // this.generatePiece();
-                // this.addDeadPiece(coords);
                 return true;
             }
             
             else if (this.board[c[0]][c[1]] != null){
                 this.curPiece.moveUp();
                 this.curLife -= 1;
-                // coords = this.curPiece.getCoords();
-                // this.generatePiece();
-                // this.addDeadPiece(coords);
                 return true;
             }
         }
 
         return false;
-        
     }
 
     checkDrop(){
-        console.log(this.curLife);
         if (this.curLife <= 0){
             this.curLife = this.totalLife;
             let coords = this.curPiece.getCoords();
+            let color = this.curPiece.color;
             this.generatePiece();
-            this.addDeadPiece(coords);
+            this.addDeadPiece(coords, color);
         }
         
     }
@@ -165,38 +159,24 @@ class Board{
 
 
     makeRotationValid(){
-        //DOES NOT WORK
-
         let coords = this.curPiece.getCoords();
         let c;
         for (let i = 0; i < coords.length; i++){
             c = coords[i]
             if (c[0] < 0){
-                // this.curPiece.addToCoords(1, 0);
-                // coords = this.curPiece.getCoords();
-                // c = coords[i]
                 return true;
             }
 
             if (c[0] >= this.numX){
-                // this.curPiece.addToCoords(-1, 0);
-                // coords = this.curPiece.getCoords();
-                // c = coords[i]
                 return true;
             }
 
             if (c[1] >= this.numY){
-                // this.curPiece.addToCoords(0, -1);
-                // coords = this.curPiece.getCoords();
-                // c = coords[i]
                 return true;
             }
 
             if (this.board?.[c[0]] && this.board[c[0]]?.[c[1]]){
                 if (this.board[c[0]][c[1] + 1] != null){
-                    // this.curPiece.addToCoords(0, -1);
-                    // coords = this.curPiece.getCoords();
-                    // c = coords[i]
                     return true;
                 }
             }
@@ -205,9 +185,9 @@ class Board{
     }
 
 
-    addDeadPiece(coords){
+    addDeadPiece(coords, color){
         for (const c of coords){
-            this.board[c[0]][c[1]] = new Block(c[0], c[1], this.blockSize);
+            this.board[c[0]][c[1]] = new Block(c[0], c[1], this.blockSize, color);
         }
     }  
 
@@ -223,15 +203,12 @@ class Board{
                 this.pieceRight(false);
             }, this.DAS)  
         }
-        if (keyIsDown(LEFT_ARROW)){
+        if (keyCode === LEFT_ARROW){
             this.pieceLeft(true);
             setTimeout(()=>{
                 this.pieceLeft(false);
             }, this.DAS)  
         }
-        // else if (keyCode === UP_ARROW){
-        //     this.curPiece.moveUp();
-        // }
         if (keyCode === 88){
             this.curPiece.rotateRight();
             if(this.makeRotationValid()){
@@ -330,7 +307,48 @@ class Board{
         this.curLife = 0;
         this.checkDrop();
         // this.checkClear();
+    }
+
+    checkOutlineCollide(coords){
+        // let up = false;
+        let count = 0;
+        let count2 = 0;
+        for (let c of coords){
+            if (c[1] < this.numY){
+                count++;
+            }
+            if (this.board[c[0]][c[1]] != null){
+                count2++;
+            }
+
+        }
+        if (count2 >= 1){
+            return false;
+        }
+        if(count ==4){
+            return true;
+        }
+        return false;
+    }
+    outlinePiece(){
+        let coords = this.curPiece.getCoords();
+        for(let c of coords){
+            c[1] += this.numY-2;
+        }
         
+
+        while (!this.checkOutlineCollide(coords)){
+            for(let c of coords){
+                c[1]--;  
+            }
+        } 
+
+        for (const c of coords){
+            fill(100);
+            square(c[0] * this.blockSize, c[1] * this.blockSize, this.blockSize);
+        }
+
+
     }
 
 }
