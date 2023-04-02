@@ -1,7 +1,4 @@
-
-
-
-let HEIGHT = window.innerHeight * .9;
+let HEIGHT = window.innerHeight * 0.9;
 let WIDTH = HEIGHT * 1/2;
 
 let XBLOCKS = 10;
@@ -13,12 +10,11 @@ let board = new Board(WIDTH, XBLOCKS, YBLOCKS);
 let DELAY = 20;
 let delay = DELAY;
 
-
 function setup() {
   createCanvas(WIDTH, HEIGHT);
 
   strokeWeight(BORDER);
-  frameRate(5);
+  // frameRate(30);
 }
 
 
@@ -36,7 +32,6 @@ function draw() {
   board.checkCollide();
   board.checkDrop();
   board.checkClear();
-
 
 }
 

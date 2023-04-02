@@ -16,6 +16,9 @@ class Board{
         this.curPiece;
         this.generatePiece();
 
+        this.heldPiece;
+        this.canHold = true;
+
         this.ARR = 20;
         this.DAS = 100;
         this.SDF = 40;
@@ -78,7 +81,7 @@ class Board{
             }
         }
         // this.generatePiece();
-        console.log(this.board);
+        // console.log(this.board);
     }
 
     drawPiece(){
@@ -189,6 +192,7 @@ class Board{
         for (const c of coords){
             this.board[c[0]][c[1]] = new Block(c[0], c[1], this.blockSize, color);
         }
+        this.canHold = true;
     }  
 
 
@@ -226,9 +230,28 @@ class Board{
             this.hardDrop();
         }
 
+        if (keyCode === 67){
+            this.holdPiece();
+        }
+
         if (keyCode === 82){
             console.log(this.board);
         }
+    }
+
+    holdPiece(){
+        if (!this.canHold){
+            return;
+        }
+        let curType = this.curPiece.constructor;
+        if (this.heldPiece == null){
+            this.generatePiece();
+        }
+        else{
+            this.curPiece = new this.heldPiece(this.numX, this.blockSize);
+        }
+        this.heldPiece = curType;
+        this.canHold = false;
     }
 
     pieceLeft(first){
@@ -314,7 +337,7 @@ class Board{
         let count = 0;
         let count2 = 0;
         for (let c of coords){
-            if (c[1] < this.numY){
+            if (c[1] >= this.numY-1){
                 count++;
             }
             if (this.board[c[0]][c[1]] != null){
@@ -323,23 +346,39 @@ class Board{
 
         }
         if (count2 >= 1){
-            return false;
+            while (true){
+                let moveUp = false;
+                for(let c of coords){
+                    if (this.board[c[0]][c[1]] != null){
+                        moveUp = true;
+                    }
+                }
+                if(moveUp){
+                    for(let c of coords){
+                        c[1]--;
+                    }
+                }
+                else{
+                    break;
+                }
+            }
+            return true;
         }
-        if(count ==4){
+        if(count >=1){
             return true;
         }
         return false;
     }
     outlinePiece(){
         let coords = this.curPiece.getCoords();
-        for(let c of coords){
-            c[1] += this.numY-2;
-        }
+        // for(let c of coords){
+        //     c[1] += this.numY;
+        // }
         
-
         while (!this.checkOutlineCollide(coords)){
             for(let c of coords){
-                c[1]--;  
+                // console.log(c[1]);
+                c[1]++;  
             }
         } 
 
