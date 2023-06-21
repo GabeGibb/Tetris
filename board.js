@@ -1,6 +1,6 @@
 
 class Board{
-    constructor(width, x, y){
+    constructor(height, x, y, arr, das, sdf, life){
         this.board = new Array(x);
         for(let i = 0; i < x; i++){
             this.board[i] = new Array(y);
@@ -8,7 +8,7 @@ class Board{
         
         this.numX = x;
         this.numY = y;
-        this.blockSize = width / x;
+        this.blockSize = height / y;
 
         this.pieces = [IPiece, JPiece, LPiece, OPiece, SPiece, TPiece, ZPiece];
         this.curBag = [];
@@ -19,12 +19,12 @@ class Board{
         this.heldPiece;
         this.canHold = true;
 
-        this.ARR = 20;
-        this.DAS = 100;
-        this.SDF = 40;
+        this.ARR = arr;
+        this.DAS = das;
+        this.SDF = sdf;
 
-        this.curLife = 5;
-        this.totalLife = 5;
+        this.curLife = life;
+        this.totalLife = life;
     }
 
     drawBoard(){

@@ -5,11 +5,23 @@ let XBLOCKS = 10;
 let YBLOCKS = 20;
 
 let BORDER = 3
-let board = new Board(WIDTH, XBLOCKS, YBLOCKS);
+// let board = new Board(WIDTH, XBLOCKS, YBLOCKS);
 
 let DELAY = 20;
 let delay = DELAY;
 
+let ARR = 20;
+let DAS = 100;
+let SDF = 40;
+let life = 5;
+
+
+function updateBoard(){
+
+  board = new Board(HEIGHT, XBLOCKS, YBLOCKS, ARR, DAS, SDF, life);
+}
+
+updateBoard();
 function setup() {
   createCanvas(WIDTH, HEIGHT);
 
