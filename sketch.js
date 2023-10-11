@@ -10,8 +10,8 @@ let BORDER = 3
 let DELAY = 20;
 let delay = DELAY;
 
-let ARR = 20;
-let DAS = 100;
+let ARR = 40;
+let DAS = 200;
 let SDF = 40;
 let life = 5;
 
