@@ -12,6 +12,7 @@ body {
   /* This centers our sketch vertically. */
   align-items: center;
   flex-direction: row;
+  gap: 10px;
 }
 
 .slider{
