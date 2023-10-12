@@ -11,7 +11,7 @@ let DELAY = 20;
 let delay = DELAY;
 
 let ARR = 40;
-let DAS = 200;
+let DAS = 150;
 let SDF = 40;
 let life = 5;
 

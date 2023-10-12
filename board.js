@@ -25,6 +25,8 @@ class Board{
 
         this.curLife = life;
         this.totalLife = life;
+
+        this.moveNum = 0;
     }
 
     drawBoard(){
@@ -202,15 +204,23 @@ class Board{
             this.softDrop();
         }
         if (keyCode === RIGHT_ARROW){
+            this.moveNum++;
+            let curNum = this.moveNum;
             this.pieceRight(true);
             setTimeout(()=>{
-                this.pieceRight(false);
+                if(this.moveNum == curNum){
+                    this.pieceRight(false);
+                }
             }, this.DAS)  
         }
         if (keyCode === LEFT_ARROW){
+            this.moveNum++;
+            let curNum = this.moveNum;
             this.pieceLeft(true);
             setTimeout(()=>{
-                this.pieceLeft(false);
+                if(this.moveNum == curNum){
+                    this.pieceLeft(false);
+                }
             }, this.DAS)  
         }
         if (keyCode === 88){
@@ -238,6 +248,7 @@ class Board{
             console.log(this.board);
         }
     }
+
 
     holdPiece(){
         if (!this.canHold){
